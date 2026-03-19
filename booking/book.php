@@ -4,7 +4,7 @@ include '../includes/header.php';
 
 // Require login to book
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /tms/login.php");
+    header("Location: " . BASE_URL . "login.php");
     exit;
 }
 
@@ -32,7 +32,7 @@ $train = $stmt->fetch();
     </div>
     
     <div class="booking-widget" style="width: 100%; box-shadow: none; border: 1px solid var(--border-color); margin: 0; padding: 20px;">
-        <form action="/tms/booking/process.php" method="POST" id="book-form">
+        <form action="<?php echo BASE_URL; ?>booking/process.php" method="POST" id="book-form">
             <input type="hidden" name="train_id" value="<?php echo htmlspecialchars($train_id); ?>">
             <input type="hidden" name="date" value="<?php echo htmlspecialchars($date); ?>">
             <input type="hidden" name="class" value="<?php echo htmlspecialchars($class); ?>">

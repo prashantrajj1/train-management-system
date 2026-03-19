@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $pdo->prepare("INSERT INTO Schedule (Train_ID, Station_ID, Arrival_Time, Departure_Time, Travel_Date) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([$train_id, $station_id, $arrival, $departure, $date]);
     
-    echo "<script>window.location.href = '/tms/train-management-system/routes/index.php';</script>";
+    echo "<script>window.location.href = '/tms/routes/index.php';</script>";
     exit;
 }
 ?>
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             
             <button type="submit" class="btn-search btn-primary" style="background-color: var(--primary-color);">Save Schedule</button>
-            <a href="/tms/train-management-system/routes/index.php" style="display: block; text-align: center; margin-top: 15px; color: #555;">Cancel</a>
+            <a href="/tms/routes/index.php" style="display: block; text-align: center; margin-top: 15px; color: #555;">Cancel</a>
         </form>
     </div>
 </div>

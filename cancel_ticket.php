@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /tms/login.php");
+    header("Location: " . BASE_URL . "login.php");
     exit;
 }
 
@@ -35,10 +35,10 @@ if ($ticket_id) {
             $stmt_del_res->execute([$ticket_id]);
 
             $pdo->commit();
-            header("Location: /tms/account.php?msg=cancelled");
+            header("Location: " . BASE_URL . "account.php?msg=cancelled");
         } else {
             // Unauthorized or invalid ticket
-            header("Location: /tms/account.php?msg=error");
+            header("Location: " . BASE_URL . "account.php?msg=error");
         }
         exit;
     } catch (PDOException $e) {
@@ -46,7 +46,7 @@ if ($ticket_id) {
         die("Cancellation failed: " . $e->getMessage());
     }
 } else {
-    header("Location: /tms/account.php");
+    header("Location: " . BASE_URL . "account.php");
     exit;
 }
 ?>

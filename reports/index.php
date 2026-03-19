@@ -3,7 +3,7 @@ require_once '../config/db.php';
 include '../includes/header.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
-    header("Location: /tms/train-management-system/index.php");
+    header("Location: " . BASE_URL . "index.php");
     exit;
 }
 
@@ -57,9 +57,9 @@ $revenue = $rev_stmt->fetchColumn();
                     </span>
                 </td>
                 <td>
-                    <a href="/tms/train-management-system/reports/ticket.php?id=<?php echo $t['Ticket_ID']; ?>" class="btn-action btn-primary">View</a>
+                    <a href="/tms/reports/ticket.php?id=<?php echo $t['Ticket_ID']; ?>" class="btn-action btn-primary">View</a>
                     <?php if($t['Status'] != 'Cancelled'): ?>
-                        <a href="/tms/train-management-system/reports/cancel.php?id=<?php echo $t['Ticket_ID']; ?>" class="btn-action btn-delete" onclick="return confirm('Cancel this ticket?');">Cancel</a>
+                        <a href="/tms/reports/cancel.php?id=<?php echo $t['Ticket_ID']; ?>" class="btn-action btn-delete" onclick="return confirm('Cancel this ticket?');">Cancel</a>
                     <?php endif; ?>
                 </td>
             </tr>

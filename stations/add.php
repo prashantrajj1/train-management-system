@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("INSERT INTO Station (Station_Name, Station_Code, Location) VALUES (?, ?, ?)");
             $stmt->execute([$name, $code, $loc]);
         }
-        echo "<script>window.location.href = '/tms/train-management-system/stations/index.php';</script>";
+        echo "<script>window.location.href = '/tms/stations/index.php';</script>";
         exit;
     } catch (PDOException $e) {
         $error = "Error: Station code must be unique. (" . $e->getMessage() . ")";
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="text" name="location" class="form-control" value="<?php echo htmlspecialchars($station['Location']); ?>" required>
             </div>
             <button type="submit" class="btn-search btn-primary" style="background-color: var(--primary-color);">Save Station</button>
-            <a href="/tms/train-management-system/stations/index.php" style="display: block; text-align: center; margin-top: 15px; color: #555;">Cancel</a>
+            <a href="/tms/stations/index.php" style="display: block; text-align: center; margin-top: 15px; color: #555;">Cancel</a>
         </form>
     </div>
 </div>

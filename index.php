@@ -60,6 +60,8 @@ $all_stations = $stmt_st->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <script>
+const BASE_URL = '<?php echo BASE_URL; ?>';
+
 document.getElementById('trainSearchForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -70,7 +72,7 @@ document.getElementById('trainSearchForm').addEventListener('submit', function(e
     const to = document.getElementById('to').value;
     const date = document.getElementById('date').value;
     
-    fetch(`/tms/train-management-system/api/search_trains.php?from_station=${encodeURIComponent(from)}&to_station=${encodeURIComponent(to)}&travel_date=${encodeURIComponent(date)}`)
+    fetch(`${BASE_URL}api/search_trains.php?from_station=${encodeURIComponent(from)}&to_station=${encodeURIComponent(to)}&travel_date=${encodeURIComponent(date)}`)
         .then(response => response.json())
         .then(data => {
             const resultsDiv = document.getElementById('searchResults');
@@ -142,7 +144,7 @@ function viewRoute(trainId, trainName) {
     document.getElementById('modalBody').innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fa fa-spinner fa-spin fa-2x"></i> Loading route...</div>';
     document.getElementById('trainModal').style.display = 'block';
     
-    fetch(`/tms/train-management-system/api/get_route.php?train_id=${trainId}`)
+    fetch(`${BASE_URL}api/get_route.php?train_id=${trainId}`)
         .then(res => res.json())
         .then(data => {
             if (data.error) {
@@ -200,7 +202,7 @@ function viewSeats(classes, trainId, date) {
             <div style="color: #666; margin-top: 5px; font-size: 1.1rem;">₹${cls.fare}</div>
             
             ${cls.available > 0 ? 
-                `<a href="/tms/train-management-system/booking/book.php?train_id=${trainId}&date=${date}&class=${encodeURIComponent(cls.code)}" class="btn" style="margin-top: 15px; background: #004a99; padding: 8px; width: 100%; display: block; text-align: center; text-decoration: none; box-sizing: border-box; font-size: 0.9rem;">Book Now</a>` : 
+                `<a href="${BASE_URL}booking/book.php?train_id=${trainId}&date=${date}&class=${encodeURIComponent(cls.code)}" class="btn" style="margin-top: 15px; background: #004a99; padding: 8px; width: 100%; display: block; text-align: center; text-decoration: none; box-sizing: border-box; font-size: 0.9rem;">Book Now</a>` : 
                 `<button disabled class="btn" style="margin-top: 15px; background: #ccc; cursor: not-allowed; padding: 8px; width: 100%; font-size: 0.9rem;">Not Available</button>`
             }
         </div>`;

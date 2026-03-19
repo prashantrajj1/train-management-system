@@ -14,7 +14,7 @@ $trains = $stmt->fetchAll();
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2 style="color: var(--primary-color);">Available Trains</h2>
         <?php if ($isAdmin): ?>
-        <a href="/tms/train-management-system/trains/add.php" class="btn-action btn-primary"><i class="fa fa-plus"></i> Add New Train</a>
+        <a href="/tms/trains/add.php" class="btn-action btn-primary"><i class="fa fa-plus"></i> Add New Train</a>
         <?php endif; ?>
     </div>
 
@@ -49,8 +49,8 @@ $trains = $stmt->fetchAll();
                 </td>
                 <?php if ($isAdmin): ?>
                 <td>
-                    <a href="/tms/train-management-system/trains/add.php?id=<?php echo $t['Train_ID']; ?>" class="btn-action btn-edit">Edit</a>
-                    <a href="/tms/train-management-system/trains/delete.php?id=<?php echo $t['Train_ID']; ?>" class="btn-action btn-delete" onclick="return confirm('Are you sure you want to delete this train?');">Delete</a>
+                    <a href="/tms/trains/add.php?id=<?php echo $t['Train_ID']; ?>" class="btn-action btn-edit">Edit</a>
+                    <a href="/tms/trains/delete.php?id=<?php echo $t['Train_ID']; ?>" class="btn-action btn-delete" onclick="return confirm('Are you sure you want to delete this train?');">Delete</a>
                 </td>
                 <?php endif; ?>
             </tr>
@@ -95,7 +95,7 @@ function viewRoute(trainId, trainName) {
     document.getElementById('modalBody').innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fa fa-spinner fa-spin fa-2x"></i> Loading route...</div>';
     document.getElementById('trainModal').style.display = 'block';
     
-    fetch(`/tms/train-management-system/api/get_route.php?train_id=${trainId}`)
+    fetch(`/tms/api/get_route.php?train_id=${trainId}`)
         .then(res => res.json())
         .then(data => {
             if (data.error) {
@@ -152,7 +152,7 @@ function fetchSeats(trainId) {
     const contentDiv = document.getElementById(`seats-content-${trainId}`);
     contentDiv.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Loading availability...';
     
-    fetch(`/tms/train-management-system/api/check_seats.php?train_id=${trainId}&travel_date=${date}`)
+    fetch(`/tms/api/check_seats.php?train_id=${trainId}&travel_date=${date}`)
         .then(res => res.json())
         .then(data => {
             if (data.error) {
@@ -172,7 +172,7 @@ function fetchSeats(trainId) {
                     <div style="color: #666; margin-top: 5px; font-size: 1.1rem;">₹${cls.fare}</div>
                     
                     ${cls.available > 0 ? 
-                        `<a href="/tms/train-management-system/booking/book.php?train_id=${trainId}&date=${date}&class=${encodeURIComponent(cls.code)}" class="btn" style="margin-top: 15px; background: #004a99; padding: 8px; width: 100%; display: block; text-align: center; text-decoration: none; box-sizing: border-box; font-size: 0.9rem;">Book</a>` : 
+                        `<a href="/tms/booking/book.php?train_id=${trainId}&date=${date}&class=${encodeURIComponent(cls.code)}" class="btn" style="margin-top: 15px; background: #004a99; padding: 8px; width: 100%; display: block; text-align: center; text-decoration: none; box-sizing: border-box; font-size: 0.9rem;">Book</a>` : 
                         `<button disabled class="btn" style="margin-top: 15px; background: #ccc; cursor: not-allowed; padding: 8px; width: 100%; font-size: 0.9rem;">No Seats</button>`
                     }
                 </div>`;

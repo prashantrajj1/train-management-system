@@ -3,7 +3,7 @@ require_once '../config/db.php';
 include '../includes/header.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
-    header("Location: /tms/train-management-system/index.php");
+    header("Location: " . BASE_URL . "index.php");
     exit;
 }
 
@@ -15,7 +15,7 @@ $stations = $stmt->fetchAll();
 <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2 style="color: var(--primary-color);">Manage Stations</h2>
-        <a href="/tms/train-management-system/stations/add.php" class="btn-action btn-primary"><i class="fa fa-plus"></i> Add New Station</a>
+        <a href="<?php echo BASE_URL; ?>stations/add.php" class="btn-action btn-primary"><i class="fa fa-plus"></i> Add New Station</a>
     </div>
 
     <?php if(isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
@@ -40,8 +40,8 @@ $stations = $stmt->fetchAll();
                 <td><?php echo htmlspecialchars($s['Station_Code']); ?></td>
                 <td><?php echo htmlspecialchars($s['Location']); ?></td>
                 <td>
-                    <a href="/tms/train-management-system/stations/add.php?id=<?php echo $s['Station_ID']; ?>" class="btn-action btn-edit">Edit</a>
-                    <a href="/tms/train-management-system/stations/delete.php?id=<?php echo $s['Station_ID']; ?>" class="btn-action btn-delete" onclick="return confirm('Are you sure you want to delete this station?');">Delete</a>
+                    <a href="<?php echo BASE_URL; ?>stations/add.php?id=<?php echo $s['Station_ID']; ?>" class="btn-action btn-edit">Edit</a>
+                    <a href="<?php echo BASE_URL; ?>stations/delete.php?id=<?php echo $s['Station_ID']; ?>" class="btn-action btn-delete" onclick="return confirm('Are you sure you want to delete this station?');">Delete</a>
                 </td>
             </tr>
             <?php endforeach; ?>

@@ -4,7 +4,7 @@ include '../includes/header.php';
 
 // Security check: Only Admins can access
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
-    header("Location: /tms/index.php");
+    header("Location: " . BASE_URL . "index.php");
     exit;
 }
 
@@ -110,20 +110,20 @@ $recentBookings = $pdo->query("
             <h3 style="color: #333; margin-bottom: 20px;"><i class="fa fa-bolt"></i> Quick Actions</h3>
             
             <div style="display: flex; flex-direction: column; gap: 12px;">
-                <a href="/tms/trains/add.php" class="btn" style="text-align: left; background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
+                <a href="<?php echo BASE_URL; ?>trains/add.php" class="btn" style="text-align: left; background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
                     <i class="fa fa-plus-circle" style="color: var(--primary-color);"></i> Add New Train
                 </a>
-                <a href="/tms/stations/add.php" class="btn" style="text-align: left; background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
+                <a href="<?php echo BASE_URL; ?>stations/add.php" class="btn" style="text-align: left; background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
                     <i class="fa fa-plus-circle" style="color: var(--primary-color);"></i> Add Station
                 </a>
-                <a href="/tms/routes/add_schedule.php" class="btn" style="text-align: left; background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
+                <a href="<?php echo BASE_URL; ?>routes/add_schedule.php" class="btn" style="text-align: left; background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
                     <i class="fa fa-calendar-plus" style="color: var(--primary-color);"></i> Add Schedule
                 </a>
                 <hr style="border: none; border-top: 1px solid #eee; margin: 10px 0;">
-                <a href="/tms/trains/index.php" class="btn" style="text-align: left; background: #fff; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
+                <a href="<?php echo BASE_URL; ?>trains/index.php" class="btn" style="text-align: left; background: #fff; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
                     <i class="fa fa-list"></i> View All Trains
                 </a>
-                <a href="/tms/reports/index.php" class="btn" style="text-align: left; background: #fff; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
+                <a href="<?php echo BASE_URL; ?>reports/index.php" class="btn" style="text-align: left; background: #fff; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
                     <i class="fa fa-file-invoice-dollar"></i> Revenue Reports
                 </a>
             </div>

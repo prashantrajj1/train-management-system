@@ -7,13 +7,13 @@ if ($id) {
     try {
         $stmt = $pdo->prepare("DELETE FROM Train WHERE Train_ID = ?");
         $stmt->execute([$id]);
-        header("Location: /tms/train-management-system/trains/index.php?msg=deleted");
+        header("Location: " . BASE_URL . "trains/index.php?msg=deleted");
         exit;
     } catch (PDOException $e) {
         die("Error deleting train: " . $e->getMessage());
     }
 } else {
-    header("Location: /tms/train-management-system/trains/index.php");
+    header("Location: " . BASE_URL . "trains/index.php");
     exit;
 }
 ?>

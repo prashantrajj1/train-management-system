@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->commit();
         
         // Redirect to payment
-        header("Location: /tms/payments/pay.php?ticket_id=$ticket_id");
+        header("Location: " . BASE_URL . "payments/pay.php?ticket_id=$ticket_id");
         exit;
 
     } catch (PDOException $e) {

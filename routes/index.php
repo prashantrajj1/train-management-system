@@ -3,7 +3,7 @@ require_once '../config/db.php';
 include '../includes/header.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
-    header("Location: /tms/train-management-system/index.php");
+    header("Location: " . BASE_URL . "index.php");
     exit;
 }
 
@@ -20,7 +20,7 @@ $schedules = $stmt->fetchAll();
 <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2 style="color: var(--primary-color);">Manage Schedules</h2>
-        <a href="/tms/train-management-system/routes/add_schedule.php" class="btn-action btn-primary"><i class="fa fa-plus"></i> Add New Schedule</a>
+        <a href="/tms/routes/add_schedule.php" class="btn-action btn-primary"><i class="fa fa-plus"></i> Add New Schedule</a>
     </div>
 
     <?php if(isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
@@ -49,7 +49,7 @@ $schedules = $stmt->fetchAll();
                 <td><?php echo htmlspecialchars($s['Departure_Time']); ?></td>
                 <td><?php echo htmlspecialchars($s['Travel_Date']); ?></td>
                 <td>
-                    <a href="/tms/train-management-system/routes/delete_schedule.php?id=<?php echo $s['Schedule_ID']; ?>" class="btn-action btn-delete" onclick="return confirm('Delete this schedule?');">Delete</a>
+                    <a href="/tms/routes/delete_schedule.php?id=<?php echo $s['Schedule_ID']; ?>" class="btn-action btn-delete" onclick="return confirm('Delete this schedule?');">Delete</a>
                 </td>
             </tr>
             <?php endforeach; ?>

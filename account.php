@@ -4,7 +4,7 @@ include 'includes/header.php';
 
 // Redirect if not logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /tms/login.php");
+    header("Location: " . BASE_URL . "login.php");
     exit;
 }
 

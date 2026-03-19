@@ -13,4 +13,7 @@ try {
 } catch (PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
 }
+
+// Global base URL for the project
+define('BASE_URL', '/tms/');
 ?>

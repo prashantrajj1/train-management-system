@@ -53,7 +53,7 @@ $ticket = $stmt->fetch();
     
     <div style="text-align: center; margin-top: 20px;">
         <button onclick="window.print()" class="btn-action btn-primary" style="font-size: 16px; padding: 10px 20px;">Print Ticket</button>
-        <a href="/tms/train-management-system/index.php" class="btn-action" style="background: #6c757d; font-size: 16px; padding: 10px 20px; margin-left: 10px;">Go to Home</a>
+        <a href="/tms/index.php" class="btn-action" style="background: #6c757d; font-size: 16px; padding: 10px 20px; margin-left: 10px;">Go to Home</a>
     </div>
 </div>
 

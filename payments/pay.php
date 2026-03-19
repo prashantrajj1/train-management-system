@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt_pay = $pdo->prepare("INSERT INTO Payment (Ticket_ID, Amount, Payment_Mode, Payment_Status) VALUES (?, ?, ?, 'Success')");
     $stmt_pay->execute([$ticket_id, $ticket['Fare'], $mode]);
     
-    echo "<script>alert('Payment Successful! Ticket Booked.'); window.location.href = '/tms/reports/ticket.php?id=$ticket_id';</script>";
+    echo "<script>alert('Payment Successful! Ticket Booked.'); window.location.href = '" . BASE_URL . "reports/ticket.php?id=$ticket_id';</script>";
     exit;
 }
 ?>
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p style="color: #555; margin-bottom: 12px; font-weight: 600;">
                     <i class="fa fa-qrcode"></i>&nbsp; Scan QR with any UPI app to pay
                 </p>
-                <img src="/tms/assets/img/upi_qr.jpg"
+                <img src="<?php echo BASE_URL; ?>assets/img/upi_qr.jpg"
                      alt="UPI QR Code - PRASHANT KUMAR"
                      style="width: 220px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
                 <p style="margin-top: 12px; font-size: 0.9rem; color: #444;">
