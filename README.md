@@ -121,12 +121,6 @@ http://localhost/train-management-system
 
 ---
 
-## 🌐 Live Demo
-
-👉 https://trainmanagement.free.nf
-
----
-
 ## ⚠️ Notes
 
 * Make sure MySQL is running
