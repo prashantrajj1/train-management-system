@@ -32,7 +32,7 @@ $sql = "
     JOIN Passenger p  ON t.Passenger_ID = p.Passenger_ID
     JOIN Train    tr  ON t.Train_ID     = tr.Train_ID
     LEFT JOIN Reservation r ON t.Ticket_ID = r.Ticket_ID
-    WHERE p.User_ID = ?
+    WHERE p.User_ID = ? AND t.Hidden_By_User = FALSE
     ORDER BY t.Travel_Date DESC
 ";
 $stmt = $pdo->prepare($sql);
@@ -57,6 +57,10 @@ $past     = array_values(array_filter($tickets, fn($t) => $t['Travel_Date'] <  $
         <?php elseif ($_GET['msg'] == 'error'): ?>
             <div style="background: #f8d7da; color: #721c24; padding: 12px; border-radius: 6px; margin-bottom: 20px; text-align: center; font-weight: 600;">
                 <i class="fa fa-exclamation-triangle"></i> Cancellation failed or unauthorized.
+            </div>
+        <?php elseif ($_GET['msg'] == 'cleared'): ?>
+            <div style="background: #d4edda; color: #155724; padding: 12px; border-radius: 6px; margin-bottom: 20px; text-align: center; font-weight: 600;">
+                <i class="fa fa-check-circle"></i> Past journey history cleared successfully.
             </div>
         <?php endif; ?>
     <?php endif; ?>
@@ -171,11 +175,18 @@ $past     = array_values(array_filter($tickets, fn($t) => $t['Travel_Date'] <  $
 
     <!-- Past Journeys -->
     <div style="background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,74,153,0.12); padding: 30px;">
-        <h3 style="color: #555; margin-bottom: 20px;">
-            <i class="fa fa-history"></i>&nbsp; Past Journeys
-            <span style="font-size: 0.85rem; font-weight: normal; color: #888; margin-left: 8px;">
-                (<?php echo count($past); ?>)
-            </span>
+        <h3 style="color: #555; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <i class="fa fa-history"></i>&nbsp; Past Journeys
+                <span style="font-size: 0.85rem; font-weight: normal; color: #888; margin-left: 8px;">
+                    (<?php echo count($past); ?>)
+                </span>
+            </div>
+            <?php if (!empty($past)): ?>
+            <a href="<?php echo BASE_URL; ?>clear_history.php" class="btn btn-action" style="background-color: #dc3545; color: white; padding: 6px 15px; font-size: 0.9rem; text-decoration: none; border-radius: 4px;" onclick="return confirm('Are you sure you want to clear your past journey history? This cannot be undone.');">
+                <i class="fa fa-trash"></i> Clear History
+            </a>
+            <?php endif; ?>
         </h3>
         <?php if (empty($past)): ?>
             <p style="text-align: center; color: #aaa; padding: 20px 0;">No past journeys yet.</p>
