@@ -19,9 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role'] = $user['Role'];
             
             if ($user['Role'] === 'Admin') {
-                header("Location: /tms/admin/index.php");
+                header("Location: /tms/train-management-system/admin/index.php");
             } else {
-                header("Location: /tms/index.php");
+                header("Location: /tms/train-management-system/index.php");
             }
             exit;
         } else {

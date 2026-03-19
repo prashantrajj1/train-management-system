@@ -74,7 +74,7 @@ if ($from && $to && $date) {
                     <td>₹<?php echo number_format($fare, 2); ?> (<?php echo htmlspecialchars($class); ?>)</td>
                     <td style="color: green; font-weight: bold;">AVAILABLE</td>
                     <td>
-                        <a href="/tms/booking/book.php?train_id=<?php echo $tr['Train_ID']; ?>&date=<?php echo $date; ?>&class=<?php echo urlencode($class); ?>" class="btn-action btn-primary" style="text-decoration: none;">Book Now</a>
+                        <a href="/tms/train-management-system/booking/book.php?train_id=<?php echo $tr['Train_ID']; ?>&date=<?php echo $date; ?>&class=<?php echo urlencode($class); ?>" class="btn-action btn-primary" style="text-decoration: none;">Book Now</a>
                     </td>
                 </tr>
                 <?php endforeach; ?>

@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Redirect properly
-    echo "<script>window.location.href = '/tms/trains/index.php';</script>";
+    echo "<script>window.location.href = '/tms/train-management-system/trains/index.php';</script>";
     exit;
 }
 ?>
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="number" name="seats" class="form-control" value="<?php echo htmlspecialchars($train['Total_Seats']); ?>" required>
             </div>
             <button type="submit" class="btn-search btn-primary" style="background-color: var(--primary-color);">Save Train</button>
-            <a href="/tms/trains/index.php" style="display: block; text-align: center; margin-top: 15px; color: #555;">Cancel</a>
+            <a href="/tms/train-management-system/trains/index.php" style="display: block; text-align: center; margin-top: 15px; color: #555;">Cancel</a>
         </form>
     </div>
 </div>

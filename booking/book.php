@@ -25,7 +25,7 @@ $train = $stmt->fetch();
     </div>
     
     <div class="booking-widget" style="width: 100%; box-shadow: none; border: 1px solid var(--border-color); margin: 0; padding: 20px;">
-        <form action="/tms/booking/process.php" method="POST" id="book-form">
+        <form action="/tms/train-management-system/booking/process.php" method="POST" id="book-form">
             <input type="hidden" name="train_id" value="<?php echo htmlspecialchars($train_id); ?>">
             <input type="hidden" name="date" value="<?php echo htmlspecialchars($date); ?>">
             <input type="hidden" name="class" value="<?php echo htmlspecialchars($class); ?>">

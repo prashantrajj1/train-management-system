@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt_pay = $pdo->prepare("INSERT INTO Payment (Ticket_ID, Amount, Payment_Mode, Payment_Status) VALUES (?, ?, ?, 'Success')");
     $stmt_pay->execute([$ticket_id, $ticket['Fare'], $mode]);
     
-    echo "<script>alert('Payment Successful! Ticket Booked.'); window.location.href = '/tms/reports/ticket.php?id=$ticket_id';</script>";
+    echo "<script>alert('Payment Successful! Ticket Booked.'); window.location.href = '/tms/train-management-system/reports/ticket.php?id=$ticket_id';</script>";
     exit;
 }
 ?>

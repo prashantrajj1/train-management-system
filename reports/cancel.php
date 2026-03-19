@@ -16,14 +16,14 @@ if ($id) {
         $stmt_r->execute([$id]);
 
         $pdo->commit();
-        header("Location: /tms/reports/index.php?msg=cancelled");
+        header("Location: /tms/train-management-system/reports/index.php?msg=cancelled");
         exit;
     } catch (PDOException $e) {
         $pdo->rollBack();
         die("Error cancelling ticket: " . $e->getMessage());
     }
 } else {
-    header("Location: /tms/reports/index.php");
+    header("Location: /tms/train-management-system/reports/index.php");
     exit;
 }
 ?>

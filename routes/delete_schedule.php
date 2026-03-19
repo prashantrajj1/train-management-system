@@ -7,13 +7,13 @@ if ($id) {
     try {
         $stmt = $pdo->prepare("DELETE FROM Schedule WHERE Schedule_ID = ?");
         $stmt->execute([$id]);
-        header("Location: /tms/routes/index.php?msg=deleted");
+        header("Location: /tms/train-management-system/routes/index.php?msg=deleted");
         exit;
     } catch (PDOException $e) {
         die("Error deleting schedule: " . $e->getMessage());
     }
 } else {
-    header("Location: /tms/routes/index.php");
+    header("Location: /tms/train-management-system/routes/index.php");
     exit;
 }
 ?>
