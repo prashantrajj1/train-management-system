@@ -17,6 +17,14 @@ $trains = $stmt->fetchAll();
         <a href="/tms/trains/add.php" class="btn-action btn-primary"><i class="fa fa-plus"></i> Add New Train</a>
         <?php endif; ?>
     </div>
+    
+    <!-- Search Bar -->
+    <div style="margin-bottom: 20px; position: relative;">
+        <i class="fa fa-search" style="position: absolute; left: 15px; top: 12px; color: #888;"></i>
+        <input type="text" id="trainSearch" placeholder="Search by Train Name or Number..." 
+               style="width: 100%; padding: 10px 10px 10px 40px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);"
+               onkeyup="filterTrains()">
+    </div>
 
     <?php if(isset($_GET['msg']) && $_GET['msg'] == 'deleted'): ?>
         <p style="color: green; background: #d4edda; padding: 10px; border-radius: 4px;">Train deleted successfully.</p>
@@ -36,8 +44,11 @@ $trains = $stmt->fetchAll();
         </thead>
         <tbody>
             <?php foreach($trains as $t): ?>
-            <tr>
-                <td><strong><?php echo htmlspecialchars($t['Train_Name']); ?></strong><br><small class="text-muted"><?php echo htmlspecialchars($t['Train_ID']); ?></small></td>
+            <tr class="train-row">
+                <td>
+                    <strong><span class="train-name"><?php echo htmlspecialchars($t['Train_Name']); ?></span></strong>
+                    <br><small class="text-muted"><span class="train-id"><?php echo htmlspecialchars($t['Train_ID']); ?></span></small>
+                </td>
                 <td><?php echo htmlspecialchars($t['Train_Type']); ?></td>
                 <td>
                     <button onclick="toggleSeats(<?php echo $t['Train_ID']; ?>)" style="background: none; border: 1px dashed var(--primary-color); color: var(--primary-color); padding: 5px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='var(--primary-color)'; this.style.color='#fff';" onmouseout="this.style.background='none'; this.style.color='var(--primary-color)';">
@@ -90,6 +101,29 @@ $trains = $stmt->fetchAll();
 </div>
 
 <script>
+function filterTrains() {
+    const input = document.getElementById('trainSearch');
+    const filter = input.value.toUpperCase();
+    const rows = document.getElementsByClassName('train-row');
+    
+    for (let i = 0; i < rows.length; i++) {
+        const name = rows[i].getElementsByClassName('train-name')[0].textContent;
+        const id = rows[i].getElementsByClassName('train-id')[0].textContent;
+        const type = rows[i].cells[1].textContent;
+        
+        if (name.toUpperCase().indexOf(filter) > -1 || id.toUpperCase().indexOf(filter) > -1 || type.toUpperCase().indexOf(filter) > -1) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+            // Also hide the seat row if it was open
+            const nextRow = rows[i].nextElementSibling;
+            if (nextRow && nextRow.id.startsWith('seats-row-')) {
+                nextRow.style.display = "none";
+            }
+        }
+    }
+}
+
 function viewRoute(trainId, trainName) {
     document.getElementById('modalTitle').textContent = `Route for ${trainName}`;
     document.getElementById('modalBody').innerHTML = '<div style="text-align: center; padding: 20px;"><i class="fa fa-spinner fa-spin fa-2x"></i> Loading route...</div>';
@@ -169,7 +203,6 @@ function fetchSeats(trainId) {
                 <div style="border: 1px solid #c8d2e0; border-radius: 6px; padding: 15px; flex: 1; min-width: 120px; background: #fff; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
                     <div style="font-weight: bold; color: #004a99; font-size: 1.1rem; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 10px;">${cls.name} (${cls.code})</div>
                     <div style="color: ${availableColor}; font-weight: bold; font-size: 1.2rem;">${statusText}</div>
-                    <div style="color: #666; margin-top: 5px; font-size: 1.1rem;">₹${cls.fare}</div>
                     
                     ${cls.available > 0 ? 
                         `<a href="/tms/booking/book.php?train_id=${trainId}&date=${date}&class=${encodeURIComponent(cls.code)}" class="btn" style="margin-top: 15px; background: #004a99; padding: 8px; width: 100%; display: block; text-align: center; text-decoration: none; box-sizing: border-box; font-size: 0.9rem;">Book</a>` : 

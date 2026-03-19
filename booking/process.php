@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $age = $_POST['age'];
     $gender = $_POST['gender'];
     $phone = $_POST['phone'];
+    $fare = isset($_POST['fare']) ? floatval($_POST['fare']) : 500;
 
     try {
         $pdo->beginTransaction();
@@ -34,12 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt_pass->execute([$name, $age, $gender, $phone, $user_id]);
         $passenger_id = $pdo->lastInsertId();
 
-        // 3. Calculate Fare (Dynamic formulation based on class)
-        $base_fare = 500.00; // Base arbitrary fare
-        if ($class === '1A') $base_fare *= 3;
-        if ($class === '2A') $base_fare *= 2;
-        if ($class === 'SL') $base_fare *= 0.8;
-        $fare = $base_fare;
+        // 3. Finalize Fare
+        if ($fare <= 0) $fare = 500;
 
         // 4. Create Ticket
         $stmt_ticket = $pdo->prepare("INSERT INTO Ticket (Passenger_ID, Train_ID, Travel_Date, Class_Type, Status, Fare) VALUES (?, ?, ?, ?, ?, ?)");

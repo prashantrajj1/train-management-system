@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 $train_id = $_GET['train_id'] ?? '';
 $date = $_GET['date'] ?? '';
 $class = $_GET['class'] ?? '';
+$fare = $_GET['fare'] ?? 500;
 $logged_name = $_SESSION['username'] ?? '';
 
 if (!$train_id || !$date) {
@@ -28,7 +29,8 @@ $train = $stmt->fetch();
     <div style="margin-bottom: 20px; padding: 15px; background: #e2eefd; border-radius: 4px;">
         <strong>Booking for:</strong> <?php echo htmlspecialchars($train['Train_Name']); ?> (<?php echo htmlspecialchars($train['Train_Type']); ?>)<br>
         <strong>Travel Date:</strong> <?php echo htmlspecialchars($date); ?><br>
-        <strong>Class:</strong> <?php echo htmlspecialchars($class); ?>
+        <strong>Class:</strong> <?php echo htmlspecialchars($class); ?><br>
+        <strong>Total Fare:</strong> ₹<?php echo htmlspecialchars($fare); ?>
     </div>
     
     <div class="booking-widget" style="width: 100%; box-shadow: none; border: 1px solid var(--border-color); margin: 0; padding: 20px;">
@@ -36,6 +38,7 @@ $train = $stmt->fetch();
             <input type="hidden" name="train_id" value="<?php echo htmlspecialchars($train_id); ?>">
             <input type="hidden" name="date" value="<?php echo htmlspecialchars($date); ?>">
             <input type="hidden" name="class" value="<?php echo htmlspecialchars($class); ?>">
+            <input type="hidden" name="fare" value="<?php echo htmlspecialchars($fare); ?>">
             
             <div class="form-group">
                 <label>Passenger Name</label>

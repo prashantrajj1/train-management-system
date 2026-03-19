@@ -69,7 +69,7 @@ $recentBookings = $pdo->query("
         <div style="background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 24px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3 style="color: #333;"><i class="fa fa-clock-rotate-left"></i> Recent Bookings</h3>
-                <a href="/tms/reports/index.php" style="color: var(--primary-color); text-decoration: none; font-size: 0.9rem; font-weight: 600;">View All</a>
+                <a href="<?php echo BASE_URL; ?>admin/bookings.php" style="color: var(--primary-color); text-decoration: none; font-size: 0.9rem; font-weight: 600;">View All</a>
             </div>
             <table>
                 <thead>
@@ -120,11 +120,17 @@ $recentBookings = $pdo->query("
                     <i class="fa fa-calendar-plus" style="color: var(--primary-color);"></i> Add Schedule
                 </a>
                 <hr style="border: none; border-top: 1px solid #eee; margin: 10px 0;">
-                <a href="<?php echo BASE_URL; ?>trains/index.php" class="btn" style="text-align: left; background: #fff; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
+                <a href="<?php echo BASE_URL; ?>trains/index.php" class="btn" style="text-align: left; background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
                     <i class="fa fa-list"></i> View All Trains
                 </a>
+                <a href="<?php echo BASE_URL; ?>admin/users.php" class="btn" style="text-align: left; background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
+                    <i class="fa fa-user-shield"></i> User Management
+                </a>
+                <a href="<?php echo BASE_URL; ?>admin/bookings.php" class="btn" style="text-align: left; background: #f8fafc; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
+                    <i class="fa fa-ticket"></i> All Bookings
+                </a>
                 <a href="<?php echo BASE_URL; ?>reports/index.php" class="btn" style="text-align: left; background: #fff; color: #334155; border: 1px solid #e2e8f0; width: 100%;">
-                    <i class="fa fa-file-invoice-dollar"></i> Revenue Reports
+                    <i class="fa fa-file-invoice-dollar"></i> Global Reports
                 </a>
             </div>
         </div>

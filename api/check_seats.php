@@ -42,29 +42,26 @@ try {
     $avail_sl = max(0, $seats_sl - ($booked_by_class['SL'] ?? 0));
     $avail_gen = max(0, $seats_gen - ($booked_by_class['General'] ?? 0));
     
-    // Estimate distance to get realistic base fare for standard checking
-    // Use full route distance if no origin/destination is provided
-    $sql_dist = "SELECT MIN(Departure_Time) as First_Dept, MAX(Arrival_Time) as Last_Arr FROM Schedule WHERE Train_ID = ?";
-    $dist_stmt = $pdo->prepare($sql_dist);
-    $dist_stmt->execute([$train_id]);
-    $dist_inf = $dist_stmt->fetch(PDO::FETCH_ASSOC);
+    // Standardize fare calculation using the new centralized function
+    require_once '../includes/functions.php';
     
-    $distance_km = 200; // default
-    if ($dist_inf && $dist_inf['First_Dept'] && $dist_inf['Last_Arr']) {
-        $arr_time = strtotime($dist_inf['Last_Arr']);
-        $dept_time = strtotime($dist_inf['First_Dept']);
-        if ($arr_time < $dept_time) $arr_time += 86400;
-        $hours = ($arr_time - $dept_time) / 3600;
-        $distance_km = round($hours * 65);
-    }
+    // Estimate total route distance based on stop count if no specific journey is given
+    $stop_stmt = $pdo->prepare("SELECT COUNT(*) as StopCount FROM Route_Station WHERE Route_ID = ?");
+    $stop_stmt->execute([$train_id]);
+    $stop_data = $stop_stmt->fetch(PDO::FETCH_ASSOC);
+    $total_stops = (int)$stop_data['StopCount'];
+    $distance_km = max(100, ($total_stops - 1) * 100);
 
-    $base_fare = max(50, $distance_km * 1.5);
+    // Get train type for multiplier
+    $stmt_type = $pdo->prepare("SELECT Train_Type FROM Train WHERE Train_ID = ?");
+    $stmt_type->execute([$train_id]);
+    $tr_type = $stmt_type->fetchColumn();
 
     $classes = [
-        ['code' => '1A', 'name' => 'First Class AC', 'available' => $avail_1a, 'total' => $seats_1a, 'fare' => round($base_fare * 3)],
-        ['code' => '2A', 'name' => 'Second Class AC', 'available' => $avail_2a, 'total' => $seats_2a, 'fare' => round($base_fare * 2)],
-        ['code' => 'SL', 'name' => 'Sleeper', 'available' => $avail_sl, 'total' => $seats_sl, 'fare' => round($base_fare * 0.8)],
-        ['code' => 'Gen', 'name' => 'General', 'available' => $avail_gen, 'total' => $seats_gen, 'fare' => round($base_fare * 0.4)]
+        ['code' => '1A', 'name' => 'First Class AC', 'available' => $avail_1a, 'total' => $seats_1a, 'fare' => calculateFare($tr_type, $distance_km, '1A')],
+        ['code' => '2A', 'name' => 'Second Class AC', 'available' => $avail_2a, 'total' => $seats_2a, 'fare' => calculateFare($tr_type, $distance_km, '2A')],
+        ['code' => 'SL', 'name' => 'Sleeper', 'available' => $avail_sl, 'total' => $seats_sl, 'fare' => calculateFare($tr_type, $distance_km, 'SL')],
+        ['code' => 'Gen', 'name' => 'General', 'available' => $avail_gen, 'total' => $seats_gen, 'fare' => calculateFare($tr_type, $distance_km, 'Gen')]
     ];
 
     echo json_encode(['status' => 'success', 'classes' => $classes, 'date' => $date]);

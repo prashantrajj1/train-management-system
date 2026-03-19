@@ -1,5 +1,6 @@
 <?php
 require_once '../config/db.php';
+require_once '../includes/functions.php';
 include '../includes/header.php';
 
 $from = $_GET['from_station'] ?? '';
@@ -26,6 +27,7 @@ if (!$from || !$to || !$date) {
         $to_id = $to_st['Station_ID'];
 
         $sql = "SELECT t.Train_ID, t.Train_Name, t.Train_Type, t.Total_Seats,
+                       rs1.Stop_Number as From_Stop, rs2.Stop_Number as To_Stop,
                        (SELECT Arrival_Time FROM Schedule WHERE Train_ID = t.Train_ID AND Station_ID = ? LIMIT 1) as Arr,
                        (SELECT Departure_Time FROM Schedule WHERE Train_ID = t.Train_ID AND Station_ID = ? LIMIT 1) as Dept
                 FROM Route_Station rs1
@@ -71,16 +73,18 @@ if (!$from || !$to || !$date) {
                 $hours = $diff / 3600;
                 $mins = floor(($diff % 3600) / 60);
                 $tr['Duration'] = sprintf("%02d:%02d", floor($hours), $mins);
-                $distance_km = round($hours * 65);
             }
             $tr['Train_Number'] = str_pad($tr['Train_ID'], 5, "0", STR_PAD_LEFT);
             
-            $base_fare = max(50, $distance_km * 1.5);
+            // Calculate dynamic fare based on stops + train type + class
+            $stop_diff = (int)$tr['To_Stop'] - (int)$tr['From_Stop'];
+            $distance_km = $stop_diff * 100; // Estimated 100km per major stop
+            
             $tr['Classes'] = [
-                ['code' => '1A', 'name' => 'AC First Class (1A)', 'available' => $avail_1a, 'fare' => round($base_fare * 3)],
-                ['code' => '2A', 'name' => 'AC 2 Tier (2A)', 'available' => $avail_2a, 'fare' => round($base_fare * 2)],
-                ['code' => 'SL', 'name' => 'Sleeper (SL)', 'available' => $avail_sl, 'fare' => round($base_fare * 0.8)],
-                ['code' => 'Gen', 'name' => 'General (GN)', 'available' => $avail_gen, 'fare' => round($base_fare * 0.4)]
+                ['code' => '1A', 'name' => 'AC First Class (1A)', 'available' => $avail_1a, 'fare' => calculateFare($tr['Train_Type'], $distance_km, '1A')],
+                ['code' => '2A', 'name' => 'AC 2 Tier (2A)', 'available' => $avail_2a, 'fare' => calculateFare($tr['Train_Type'], $distance_km, '2A')],
+                ['code' => 'SL', 'name' => 'Sleeper (SL)', 'available' => $avail_sl, 'fare' => calculateFare($tr['Train_Type'], $distance_km, 'SL')],
+                ['code' => 'Gen', 'name' => 'General (GN)', 'available' => $avail_gen, 'fare' => calculateFare($tr['Train_Type'], $distance_km, 'Gen')]
             ];
             
             $tr['Dept_Formatted'] = $tr['Dept'] ? date('H:i', strtotime($tr['Dept'])) : 'N/A';
@@ -155,7 +159,7 @@ if (!$from || !$to || !$date) {
                                     $status_color = $is_avl ? '#28a745' : '#dc3545';
                                     $status_text = $is_avl ? 'AVAILABLE-' . str_pad($cls['available'], 4, "0", STR_PAD_LEFT) : 'WL / FULL';
                                 ?>
-                                    <div class="class-box" onclick="selectClass(this, <?php echo $tr['Train_ID']; ?>, '<?php echo $cls['code']; ?>')">
+                                    <div class="class-box" onclick="selectClass(this, <?php echo $tr['Train_ID']; ?>, '<?php echo $cls['code']; ?>', <?php echo $cls['fare']; ?>)">
                                         <div class="class-name"><?php echo $cls['name']; ?></div>
                                         <div class="class-status" style="color: <?php echo $status_color; ?>">
                                             <?php echo $status_text; ?>
@@ -171,6 +175,7 @@ if (!$from || !$to || !$date) {
                                     <input type="hidden" name="train_id" value="<?php echo $tr['Train_ID']; ?>">
                                     <input type="hidden" name="date" value="<?php echo htmlspecialchars($date); ?>">
                                     <input type="hidden" name="class" id="selected-class-<?php echo $tr['Train_ID']; ?>" value="">
+                                    <input type="hidden" name="fare" id="selected-fare-<?php echo $tr['Train_ID']; ?>" value="">
                                     <button type="submit" class="btn-book">Book Now</button>
                                 </form>
                                 <button class="btn-other-dates">OTHER DATES</button>
@@ -184,7 +189,7 @@ if (!$from || !$to || !$date) {
 </div>
 
 <script>
-function selectClass(boxElement, trainId, classCode) {
+function selectClass(boxElement, trainId, classCode, fareAmount) {
     // Remove selected state from all boxes in this train card
     const card = boxElement.closest('.irctc-card');
     card.querySelectorAll('.class-box').forEach(b => b.classList.remove('selected'));
@@ -196,6 +201,10 @@ function selectClass(boxElement, trainId, classCode) {
     const classInput = document.getElementById('selected-class-' + trainId);
     if (classInput) {
         classInput.value = classCode;
+    }
+    const fareInput = document.getElementById('selected-fare-' + trainId);
+    if (fareInput) {
+        fareInput.value = fareAmount;
     }
 }
 
