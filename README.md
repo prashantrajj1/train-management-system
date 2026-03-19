@@ -1,6 +1,6 @@
 # 🚆 Train Management System
 
-A web-based Train Management System developed using **PHP, MySQL, HTML, CSS, and JavaScript**.
+A web-based Train Management System developed using **PHP, MySQL,  CSS, and JavaScript**.
 This project allows users to search trains, book tickets, and manage railway operations efficiently.
 
 ---
