@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt_pay = $pdo->prepare("INSERT INTO Payment (Ticket_ID, Amount, Payment_Mode, Payment_Status) VALUES (?, ?, ?, 'Success')");
     $stmt_pay->execute([$ticket_id, $ticket['Fare'], $mode]);
     
-    echo "<script>alert('Payment Successful! Ticket Booked.'); window.location.href = '/tms/train-management-system/reports/ticket.php?id=$ticket_id';</script>";
+    echo "<script>alert('Payment Successful! Ticket Booked.'); window.location.href = '/tms/reports/ticket.php?id=$ticket_id';</script>";
     exit;
 }
 ?>
@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="container" style="max-width: 600px;">
     <h2 style="color: var(--primary-color); margin-bottom: 20px;">Payment Gateway</h2>
     
+    <!-- Order Summary -->
     <div style="background: #e9ecef; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
         <h3>Order Summary</h3>
         <p><strong>Passenger:</strong> <?php echo htmlspecialchars($ticket['Name']); ?></p>
@@ -41,20 +42,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h4 style="color: green; font-size: 20px;">Total Amount: ₹<?php echo number_format($ticket['Fare'], 2); ?></h4>
     </div>
 
-    <div class="booking-widget" style="width: 100%; box-shadow: none; border: 1px solid var(--border-color); margin: 0; padding: 20px;">
-        <form method="POST">
+    <!-- Payment Form -->
+    <div style="background: white; border: 1px solid #ddd; border-radius: 8px; padding: 24px;">
+        <form method="POST" id="payment-form">
             <div class="form-group">
                 <label>Select Payment Mode</label>
-                <select name="payment_mode" class="form-control" required>
+                <select name="payment_mode" id="payment_mode" class="form-control" required onchange="toggleQR(this.value)">
                     <option value="UPI">UPI / BHIM</option>
                     <option value="Credit Card">Credit Card</option>
                     <option value="Debit Card">Debit Card</option>
                     <option value="Net Banking">Net Banking</option>
                 </select>
             </div>
-            <button type="submit" class="btn-search" style="background-color: #28a745;">Make Payment of ₹<?php echo number_format($ticket['Fare'], 2); ?></button>
+
+            <!-- UPI QR Section -->
+            <div id="upi-qr-box" style="text-align: center; margin: 20px 0; padding: 20px;
+                 background: #f8f9ff; border: 2px dashed #004a99; border-radius: 10px;">
+                <p style="color: #555; margin-bottom: 12px; font-weight: 600;">
+                    <i class="fa fa-qrcode"></i>&nbsp; Scan QR with any UPI app to pay
+                </p>
+                <img src="/tms/assets/img/upi_qr.jpg"
+                     alt="UPI QR Code - PRASHANT KUMAR"
+                     style="width: 220px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                <p style="margin-top: 12px; font-size: 0.9rem; color: #444;">
+                    <strong>PRASHANT KUMAR</strong><br>
+                    <span style="color: #666;">UPI ID: 9801813297@superyes</span>
+                </p>
+                <p style="margin-top: 8px; font-size: 0.78rem; color: #999;">
+                    After scanning and paying, click the button below to confirm.
+                </p>
+            </div>
+
+            <button type="submit" class="btn-search" style="background-color: #28a745; width: 100%; margin-top: 10px;">
+                <i class="fa fa-check-circle"></i>&nbsp;
+                Confirm Payment of ₹<?php echo number_format($ticket['Fare'], 2); ?>
+            </button>
         </form>
     </div>
 </div>
+
+<script>
+function toggleQR(mode) {
+    const qrBox = document.getElementById('upi-qr-box');
+    qrBox.style.display = (mode === 'UPI') ? 'block' : 'none';
+}
+// Initialize on load
+toggleQR(document.getElementById('payment_mode').value);
+</script>
 
 <?php include '../includes/footer.php'; ?>

@@ -2,9 +2,16 @@
 require_once '../config/db.php';
 include '../includes/header.php';
 
+// Require login to book
+if (!isset($_SESSION['user_id'])) {
+    header("Location: /tms/login.php");
+    exit;
+}
+
 $train_id = $_GET['train_id'] ?? '';
 $date = $_GET['date'] ?? '';
 $class = $_GET['class'] ?? '';
+$logged_name = $_SESSION['username'] ?? '';
 
 if (!$train_id || !$date) {
     die("Invalid request");
@@ -25,14 +32,14 @@ $train = $stmt->fetch();
     </div>
     
     <div class="booking-widget" style="width: 100%; box-shadow: none; border: 1px solid var(--border-color); margin: 0; padding: 20px;">
-        <form action="/tms/train-management-system/booking/process.php" method="POST" id="book-form">
+        <form action="/tms/booking/process.php" method="POST" id="book-form">
             <input type="hidden" name="train_id" value="<?php echo htmlspecialchars($train_id); ?>">
             <input type="hidden" name="date" value="<?php echo htmlspecialchars($date); ?>">
             <input type="hidden" name="class" value="<?php echo htmlspecialchars($class); ?>">
             
             <div class="form-group">
                 <label>Passenger Name</label>
-                <input type="text" name="name" class="form-control" required>
+                <input type="text" name="name" class="form-control" value="<?php echo htmlspecialchars($logged_name); ?>" required>
             </div>
             
             <div style="display: flex; gap: 10px;">

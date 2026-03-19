@@ -1,5 +1,6 @@
 <?php
 require_once '../config/db.php';
+if (session_status() === PHP_SESSION_NONE) session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $train_id = $_POST['train_id'];
@@ -27,9 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $status = 'Waiting list'; // Basic waiting list logic
         }
 
-        // 2. Insert Passenger
-        $stmt_pass = $pdo->prepare("INSERT INTO Passenger (Name, Age, Gender, Phone) VALUES (?, ?, ?, ?)");
-        $stmt_pass->execute([$name, $age, $gender, $phone]);
+        // 2. Insert Passenger (with User_ID if logged in)
+        $user_id = $_SESSION['user_id'] ?? null;
+        $stmt_pass = $pdo->prepare("INSERT INTO Passenger (Name, Age, Gender, Phone, User_ID) VALUES (?, ?, ?, ?, ?)");
+        $stmt_pass->execute([$name, $age, $gender, $phone, $user_id]);
         $passenger_id = $pdo->lastInsertId();
 
         // 3. Calculate Fare (Dynamic formulation based on class)
@@ -54,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->commit();
         
         // Redirect to payment
-        header("Location: /tms/train-management-system/payments/pay.php?ticket_id=$ticket_id");
+        header("Location: /tms/payments/pay.php?ticket_id=$ticket_id");
         exit;
 
     } catch (PDOException $e) {
